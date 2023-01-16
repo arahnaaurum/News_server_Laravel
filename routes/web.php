@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
+use \App\Http\Controllers\NewsController;
+use \App\Http\Controllers\InfoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,10 +24,23 @@ Route::get('/hello/{name}', static function (string $name): string {
     return "hello, {$name}";
 });
 
-Route::get('/info', static function (): string {
-    return "Here is some infromation about project...";
-});
+Route::get('/info', [InfoController::class, 'index'])
+    ->name('info');
 
-Route::get('/news/{id}', static function (string $id): string {
-    return "You are reading the news with id {$id}";
+Route::group(['prefix' => ''], static function() {
+
+    Route::get('/news', [NewsController::class, 'index'])
+        ->name('news');
+
+    Route::get('/news/{id}/show', [NewsController::class, 'show'])
+        ->where('id', '\d+')
+        ->name('news.show');
+
+    Route::get('/categories', [CategoryController::class, 'index'])
+        ->name('categories');
+
+    Route::get('/categories/{id}/show', [CategoryController::class, 'show'])
+        ->where('id', '\d+')
+        ->name('category.show');
+
 });
