@@ -4,7 +4,7 @@ use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\NewsController;
 use \App\Http\Controllers\InfoController;
-
+use \App\Http\Controllers\Admin\IndexController as AdminController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -20,12 +20,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/hello/{name}', static function (string $name): string {
-    return "hello, {$name}";
-});
+Route::get('/info', [InfoController::class, 'index']);
 
-Route::get('/info', [InfoController::class, 'index'])
-    ->name('info');
+Route::group(['prefix' => 'admin'], static function() {
+    Route::get('/panel', AdminController::class)
+        ->name('admin.index');
+});
 
 Route::group(['prefix' => ''], static function() {
 
@@ -44,3 +44,4 @@ Route::group(['prefix' => ''], static function() {
         ->name('category.show');
 
 });
+

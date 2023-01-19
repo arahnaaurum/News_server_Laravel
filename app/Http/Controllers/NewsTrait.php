@@ -6,7 +6,8 @@ namespace App\Http\Controllers;
 
 trait NewsTrait
 {
-    public function getNews (int $id = null) {
+    public function getNews(int $id = null): array
+    {
         $news = [];
         $quantityNews = 10;
 

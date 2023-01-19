@@ -1,5 +1,4 @@
-<?php
-foreach($categories as $category): ?>
+<?php foreach($categories as $category): ?>
     <div>
         <h2>Category <?=$category['title']?></h2>
         <a href="<?=route('category.show', ['id' => $category['id']])?>">View all news in the category></a>
