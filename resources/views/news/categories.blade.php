@@ -1,13 +1,13 @@
 @extends('layouts.main')
 @section('content')
     <div class="row mb-2">
-        @forelse($categoies as $category)
+        @forelse($categories as $category)
             <div class="row">
                 <div class="col-md-8 blog-main">
                     <h3 class="pb-3 mb-4 font-italic border-bottom">
                         {{$category['title']}}
                     </h3>
-                    <a href="<?=route('category.show', ['id' => $category['id']])?>">View all</a>
+                    <a href="<?=route('category.show', ['id' => $category['id']])?>">View all news in the category</a>
                     @foreach($category['newslist'] as $news)
                         <div class="blog-post">
                             <h2 class="blog-post-title">{{ $news['title'] }}</h2>

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\View\Components;
 
 use Illuminate\View\Component;
+use Illuminate\View\View;
 use Illuminate\View\ViewServiceProvider;
 
 class Alert extends Component
@@ -25,7 +26,7 @@ class Alert extends Component
     /**
      * Get the view / contents that represent the component.
      *
-     * @return \Illuminate\Contracts\View\View|\Closure|string
+     * @return View
      */
     public function render(): View
     {

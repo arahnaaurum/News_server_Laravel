@@ -23,7 +23,7 @@ Route::get('/', function () {
 Route::get('/info', [InfoController::class, 'index']);
 
 Route::group(['prefix' => 'admin'], static function() {
-    Route::get('/panel', AdminController::class)
+    Route::get('/', AdminController::class)
         ->name('admin.index');
 });
 
