@@ -19,7 +19,7 @@ services:
         environment:
             - MYSQL_ROOT_PASSWORD=123
             - MYSQL_DATABASE=news
-            - MYSQL_USER=user
+            - MYSQL_USER=comment
             - MYSQL_PASSWORD=123
         ports:
             - '5557:3306'

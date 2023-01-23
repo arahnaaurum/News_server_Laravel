@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title') Main @parent @stop
+@section('title') Main @endsection
 @section('content')
 <div class="table-responsive">
     <table class="table table-striped table-sm">
