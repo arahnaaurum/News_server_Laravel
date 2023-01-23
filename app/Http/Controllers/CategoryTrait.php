@@ -6,7 +6,7 @@ namespace App\Http\Controllers;
 
 trait CategoryTrait
 {
-    private function generateNews ():array
+    private function generateNews(): array
     {
         $news = [];
         for ($i = 1; $i <= 4; $i++) {
@@ -21,7 +21,7 @@ trait CategoryTrait
         return $news;
     }
 
-    private function generateCategory (int $quantityCategory):array
+    private function generateCategory(int $quantityCategory): array
     {
         $categories = [];
         for($i=1; $i<=$quantityCategory; $i++) {
@@ -35,7 +35,7 @@ trait CategoryTrait
     }
 
 
-    public function getCategory (int $categoryId = null):array
+    public function getCategory(int $categoryId = null): array
     {
         $quantityCategory = 5;
 

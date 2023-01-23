@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\View;
@@ -8,7 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class NewsController extends Controller
+class OrderController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,7 +17,7 @@ class NewsController extends Controller
      */
     public function index(): View
     {
-        return \view('admin.news.index');
+        return \view('order.index');
     }
 
     /**
@@ -27,7 +27,7 @@ class NewsController extends Controller
      */
     public function create(): View
     {
-        return \view('admin.news.create');
+        return \view('order.create');
     }
 
     /**
@@ -38,10 +38,13 @@ class NewsController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required',
-        ]);
-        return \response()->json($request->only(['title', 'description', 'author']));
+        $path = public_path();
+        $file = $path . '/' . 'orders.txt';
+        $current = file_get_contents($file);
+        $data = $request->only(['username', 'phone', 'email', 'comment']);
+        $current .= ($data['username'] . ' ordered: ' . $data['comment'] . '. Contact info: ' . $data['email'] . ', ' . $data['phone']);
+        file_put_contents($file, $current);
+        return \response()->json($request->all());
     }
 
     /**

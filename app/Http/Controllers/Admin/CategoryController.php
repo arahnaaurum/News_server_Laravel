@@ -3,52 +3,46 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Contracts\View\View;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
-class NewsController extends Controller
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return View
+     * @return \Illuminate\Http\Response
      */
-    public function index(): View
+    public function index()
     {
-        return \view('admin.news.index');
+        //
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return View
+     * @return \Illuminate\Http\Response
      */
-    public function create(): View
+    public function create()
     {
-        return \view('admin.news.create');
+        //
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
-     * @return JsonResponse
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required',
-        ]);
-        return \response()->json($request->only(['title', 'description', 'author']));
+        //
     }
 
     /**
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return Response
+     * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
@@ -59,7 +53,7 @@ class NewsController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return Response
+     * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
@@ -71,7 +65,7 @@ class NewsController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return Response
+     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
@@ -82,7 +76,7 @@ class NewsController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return Response
+     * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {

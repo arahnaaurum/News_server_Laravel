@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\View;
@@ -8,7 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class NewsController extends Controller
+class CommentController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,7 +17,7 @@ class NewsController extends Controller
      */
     public function index(): View
     {
-        return \view('admin.news.index');
+        return \view('comment.index');
     }
 
     /**
@@ -27,7 +27,7 @@ class NewsController extends Controller
      */
     public function create(): View
     {
-        return \view('admin.news.create');
+        return \view('comment.create');
     }
 
     /**
@@ -39,9 +39,16 @@ class NewsController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required',
+            'username' => 'required',
+            'comment' => 'required',
         ]);
-        return \response()->json($request->only(['title', 'description', 'author']));
+        $path = public_path();
+        $file = $path . '/' . 'comments.txt';
+        $current = file_get_contents($file);
+        $data = $request->only(['username', 'comment']);
+        $current .= ($data['username'] . ' commented: ' . $data['comment']);
+        file_put_contents($file, $current);
+        return \response()->json($request->only(['username', 'comment']));
     }
 
     /**
