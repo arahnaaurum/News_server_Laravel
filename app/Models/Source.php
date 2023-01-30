@@ -13,15 +13,12 @@ class Source extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $table = 'sources';
 
-    public function getCategories(): Collection
-    {
-        return DB::table($this->table)->get();
-    }
-
-    public function getSourceById(int $id): mixed
-    {
-        return DB::table($this->table)->find($id);
-    }
+    protected $fillable = [
+        'site',
+        'url',
+    ];
 }

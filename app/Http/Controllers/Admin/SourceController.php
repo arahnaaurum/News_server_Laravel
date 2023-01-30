@@ -2,28 +2,24 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Enums\NewsStatus;
 use App\Http\Controllers\Controller;
-use App\Models\Category;
-use App\Models\News;
-use App\QueryBuilders\CategoriesQueryBuilder;
+use App\Models\Source;
+use App\QueryBuilders\SourcesQueryBuilder;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
-class CategoryController extends Controller
+class SourceController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return View
      */
-    public function index(CategoriesQueryBuilder $categoriesQueryBuilder): View
+    public function index(SourcesQueryBuilder $sourcesQueryBuilder): View
     {
-//        $model = new Category();
-//        $categories = $model->getCategories();
-        return \view('admin.categories.index',[
-            'categories' => $categoriesQueryBuilder->getCategoriesWithPagination(),
+        return \view('admin.sources.index',[
+            'sources' => $sourcesQueryBuilder->getSourcesWithPagination(),
         ]);
     }
 
@@ -34,7 +30,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return \view('admin.categories.create');
+        return \view('admin.sources.create');
     }
 
     /**
@@ -46,16 +42,16 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required',
+            'url' => 'required',
         ]);
 
-        $category = new Category($request->except('_token'));
+        $source = new Source($request->except('_token'));
 
-        if ($category->save()) {
-            return redirect()->route('admin.categories.index')->with('success', 'Category added');
+        if ($source->save()) {
+            return redirect()->route('admin.sources.index')->with('success', 'Source added');
         }
 
-        return \back()->with('error', 'Category not added');
+        return \back()->with('error', 'Source not added');
     }
 
     /**
@@ -76,10 +72,10 @@ class CategoryController extends Controller
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|View
      */
 
-    public function edit(Category $category)
+    public function edit(Source $source)
     {
-        return \view('admin.categories.edit',[
-            'category'=>  $category,
+        return \view('admin.sources.edit',[
+            'source'=>  $source,
         ]);
     }
 
@@ -90,15 +86,15 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, Source $source)
     {
-        $category = $category->fill(($request->except('_token')));
+        $source = $source->fill(($request->except('_token')));
 
-        if ($category->save()) {
-            return redirect()->route('admin.categories.index')->with('success', 'Category updated');
+        if ($source->save()) {
+            return redirect()->route('admin.sources.index')->with('success', 'Source updated');
         }
 
-        return \back()->with('error', 'Category not updated');
+        return \back()->with('error', 'Source not updated');
     }
 
     /**
@@ -107,9 +103,9 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Category $category): RedirectResponse
+    public function destroy(Source $source): RedirectResponse
     {
-        $category->delete();
-        return redirect()->route('admin.categories.index')->with('success', 'Category deleted');
+        $source->delete();
+        return redirect()->route('admin.sources.index')->with('success', 'Source deleted');
     }
 }

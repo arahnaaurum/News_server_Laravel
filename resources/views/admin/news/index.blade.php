@@ -1,25 +1,41 @@
 @extends('layouts.admin')
 @section('content')
     <h2>Add news</h2>
-    <a href="/admin/news/create">Go</a>
-    <h2>Existing news</h2>
-    @forelse($newslist as $n)
-        <div class="col-md-6">
-            <div class="card flex-md-row mb-4 box-shadow h-md-250">
-                <div class="card-body d-flex flex-column align-items-start">
-                    <strong class="d-inline-block mb-2 text-primary">{{ $n->author }}</strong>
-                    <h3 class="mb-0">
-                        <a class="text-dark" href="#">{{ $n -> title }}</a>
-                    </h3>
-                    <div class="mb-1 text-muted">{{ $n -> created_at }}</div>
-                    <p class="card-text mb-auto">{{ $n -> description }}</p>
-                    <a href="{{ route('news.show', ['id' => $n->id]) }}">Continue reading</a>
-                </div>
-                <img class="card-img-right flex-auto d-none d-md-block" data-src="holder.js/200x250?theme=thumb" alt="Card image cap">
-            </div>
-        </div>
-    @empty
-        <h4>No news</h4>
-    @endforelse
+    <a href='{{ route('admin.news.create') }}'>Go</a>
 
+    <h2>Existing news</h2>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-sm">
+            <thead>
+            <tr>
+                <th>#ID</th>
+                <th>Categories</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Status</th>
+                <th>Description</th>
+                <th>Created at</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+                @forelse($newslist as $news)
+                    <tr>
+                    <td>{{ $news->id }}</td>
+                    <td>{{ $news->categories->map(fn($item) => $item->title)->implode(', ') }}</td>
+                    <td>{{ $news->title }}</td>
+                    <td>{{ $news->author }}</td>
+                    <td>{{ $news->status }}</td>
+                    <td>{{ $news->description }}</td>
+                    <td>{{ $news->created_at }}</td>
+                    <td><a href="{{ route('admin.news.edit', ['news' => $news]) }}">Upd / Del</a>
+                    </td>
+                    </tr>
+                @empty
+                    <h4>No news</h4>
+                @endforelse
+            </tbody>
+        </table>
+    {{ $newslist -> links() }}
 @endsection
