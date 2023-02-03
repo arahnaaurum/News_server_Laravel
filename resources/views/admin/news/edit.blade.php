@@ -17,8 +17,8 @@
             @csrf
             @method('put')
             <div class="form-group">
-                <label for="category_id">Category</label>
-                <select class="form-control" id="category_ids" name="category_ids[]" multiple>
+                <label for="category_ids">Category</label>
+                <select class="form-control @error('$category_ids') is-invalid @enderror" id="category_ids" name="category_ids[]" multiple>
                     <option value="0">--Select category--</option>
                     @foreach($categories as $category)
                         <option @if(in_array($category->id, $news->categories->pluck('id')->toArray())) selected @endif value="{{ $category->id }}">{{ $category->title }}</option>
@@ -28,22 +28,22 @@
 
             <div class="form-group">
                 <label for="title">Title</label>
-                <input type="text" id="title" value="{{ $news->title }}" class="form-control" name="title">
+                <input type="text" id="title" value="{{ $news->title }}" class="form-control @error('title') is-invalid @enderror" name="title">
             </div>
 
             <div class="form-group">
                 <label for="description">Description</label>
-                <textarea id="description" class="form-control" name="description">{{ $news->description }}</textarea>
+                <textarea id="description" class="form-control  @error('description') is-invalid @enderror" name="description">{{ $news->description }}</textarea>
             </div>
 
             <div class="form-group">
                 <label for="image">Image</label>
-                <input type="file" id="image" class="form-control" name="image"></input>
+                <input type="file" id="image" class="form-control  @error('image') is-invalid @enderror" name="image">
             </div>
 
             <div class="form-group">
                 <label for="author">Author</label>
-                <input type="text" id="author" value="{{ $news->author }}" class="form-control" name="author">
+                <input type="text" id="author" value="{{ $news->author }}" class="form-control  @error('author') is-invalid @enderror" name="author">
             </div>
 
             <div class="form-group">

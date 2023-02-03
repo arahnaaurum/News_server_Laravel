@@ -20,5 +20,6 @@ class Source extends Model
     protected $fillable = [
         'site',
         'url',
+        'category_id'
     ];
 }

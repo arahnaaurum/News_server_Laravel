@@ -1,13 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Source\CreateRequest;
+use App\Http\Requests\Source\EditRequest;
 use App\Models\Source;
+use App\QueryBuilders\CategoriesQueryBuilder;
 use App\QueryBuilders\SourcesQueryBuilder;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use PHPUnit\Exception;
 
 class SourceController extends Controller
 {
@@ -28,24 +34,22 @@ class SourceController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|View
      */
-    public function create()
+    public function create(CategoriesQueryBuilder $categoriesQueryBuilder)
     {
-        return \view('admin.sources.create');
+        return \view('admin.sources.create', [
+            'categories'=>  $categoriesQueryBuilder->getAll(),
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @param CreateRequest $request
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(CreateRequest $request): RedirectResponse
     {
-        $request->validate([
-            'url' => 'required',
-        ]);
-
-        $source = new Source($request->except('_token'));
+        $source = Source::create($request->validated());
 
         if ($source->save()) {
             return redirect()->route('admin.sources.index')->with('success', 'Source added');
@@ -60,7 +64,7 @@ class SourceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id): void
     {
         //
     }
@@ -68,27 +72,28 @@ class SourceController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|View
+     * @param Source $source
+     * @return View
      */
 
-    public function edit(Source $source)
+    public function edit(Source $source, CategoriesQueryBuilder $categoriesQueryBuilder): View
     {
         return \view('admin.sources.edit',[
             'source'=>  $source,
+            'categories'=>  $categoriesQueryBuilder->getAll(),
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\RedirectResponse
+     * @param EditRequest $request
+     * @param Source $source
+     * @return RedirectResponse
      */
-    public function update(Request $request, Source $source)
+    public function update(EditRequest $request, Source $source): RedirectResponse
     {
-        $source = $source->fill(($request->except('_token')));
+        $source = $source->fill(($request->validated()));
 
         if ($source->save()) {
             return redirect()->route('admin.sources.index')->with('success', 'Source updated');
@@ -100,12 +105,16 @@ class SourceController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\RedirectResponse
+     * @param Source $source
+     * @return RedirectResponse
      */
     public function destroy(Source $source): RedirectResponse
     {
-        $source->delete();
-        return redirect()->route('admin.sources.index')->with('success', 'Source deleted');
+        try {
+            $source->delete();
+            return redirect()->route('admin.sources.index')->with('success', 'Source deleted');
+        } catch (Exception $exception) {
+            return \back()->with('error', 'Source not deleted');
+        }
     }
 }

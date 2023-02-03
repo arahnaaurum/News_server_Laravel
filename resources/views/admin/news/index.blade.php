@@ -29,7 +29,8 @@
                     <td>{{ $news->status }}</td>
                     <td>{{ $news->description }}</td>
                     <td>{{ $news->created_at }}</td>
-                    <td><a href="{{ route('admin.news.edit', ['news' => $news]) }}">Upd / Del</a>
+                    <td><a href="{{ route('admin.news.edit', ['news' => $news]) }}">Upd/Del</a>
+                        <a href="" class="delete" rel="{{ $news->id }}">Del</a>
                     </td>
                     </tr>
                 @empty
@@ -39,3 +40,35 @@
         </table>
     {{ $newslist -> links() }}
 @endsection
+
+@push('js')
+            <script type="text/javascript">
+                document.addEventListener('DOMContentLoaded', function(){
+                    let elements = document.querySelectorAll('.delete');
+                    elements.forEach(function (el, key) {
+                        el.addEventListener('click', function(){
+                            const id = this.getAttribute('rel');
+                            if(confirm('Delete news?')) {
+                                send(`/admin/news/${id}`).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                alert('Delete aborted');
+                            }
+                        });
+                    });
+                })
+
+                async function send(url) {
+                    let response = await fetch(url, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+                    });
+                    let result = await response.json();
+                    return result;
+                }
+            </script>
+
+@endpush

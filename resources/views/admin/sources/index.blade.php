@@ -11,6 +11,7 @@
                 <th>#ID</th>
                 <th>Site</th>
                 <th>URL</th>
+                <th>Category</th>
                 <th>Actions</th>
             </tr>
             </thead>
@@ -20,6 +21,7 @@
                     <td>{{$source -> id}}</td>
                     <td>{{$source -> site}}</td>
                     <td>{{$source -> url}}</td>
+                    <td>{{$source -> category_id}}</td>
                     <td><a href="{{ route('admin.sources.edit', ['source' => $source]) }}">Upd / Del</a>
                     </td>
                 </tr>

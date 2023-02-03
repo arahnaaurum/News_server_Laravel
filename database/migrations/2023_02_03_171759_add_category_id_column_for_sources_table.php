@@ -15,10 +15,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sources', function (Blueprint $table) {
-            $table->id();
-            $table->string('site', 50);
-            $table->string('url');
+        Schema::table('sources', static function (Blueprint $table) {
+            $table->foreignId('category_id')->references('id')->on('categories')->cascadeOnDelete();
         });
     }
 
@@ -29,6 +27,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sources');
+        Schema::table('sources', static function (Blueprint $table) {
+            $table->dropColumn('category_id');
+        });
     }
 };

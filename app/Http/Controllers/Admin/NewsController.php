@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\NewsStatus;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\News\CreateRequest;
+use App\Http\Requests\News\EditRequest;
 use App\Models\News;
 use App\QueryBuilders\CategoriesQueryBuilder;
 use App\QueryBuilders\NewsQueryBuilder;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -53,19 +56,18 @@ class NewsController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function store(Request $request): RedirectResponse
+    public function store(CreateRequest $request): RedirectResponse
     {
-        $request->validate([
-            'title' => 'required',
-        ]);
+//        $news = new News($request->except('_token', 'category_ids'));
 
-        $news = new News($request->except('_token', 'category_id'));
+        $news = News::create($request->validated());
 
-        if ($news->save()) {
-            return redirect()->route('admin.news.index')->with('success', 'News added');
+        if ($news) {
+            $news->categories()->attach($request->getCategoryIds());
+            return redirect()->route('admin.news.index')->with('success', __('messages.admin.news.success'));
         }
 
-        return \back()->with('error', 'News not added');
+        return \back()->with('error', __('messages.admin.news.fail'));
     }
 
     /**
@@ -74,7 +76,7 @@ class NewsController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function show($id)
+    public function show($id): void
     {
         //
     }
@@ -98,16 +100,17 @@ class NewsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param Request $request
+     * @param News $news
      * @return RedirectResponse
      */
-    public function update(Request $request, News $news): RedirectResponse
+    public function update(EditRequest $request, News $news): RedirectResponse
     {
-        $news = $news->fill(($request->except('_token', 'category_ids')));
+        $news = $news->fill(($request->validated()));
 
         if ($news->save()) {
-            $news->categories()->sync($request->input('category_ids'));
+//            $news->categories()->sync($request->input('category_ids'));
+            $news->categories()->sync($request->getCategoryIds());
             return redirect()->route('admin.news.index')->with('success', 'News updated');
         }
 
@@ -117,12 +120,19 @@ class NewsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param News $news
      * @return RedirectResponse
      */
     public function destroy(News $news): RedirectResponse
     {
-        $news->delete();
-        return redirect()->route('admin.news.index')->with('success', 'News deleted');
+        try {
+            $news->delete();
+            return redirect()->route('admin.news.index')->with('success', 'News deleted');
+//            return response()->json('ok');
+        } catch (Exception $exception) {
+            \Log::error($exception->getMessage(), [$exception]);
+            return \back()->with('error', 'News not deleted');
+//            return response()->json('error', 400);
+        }
     }
 }

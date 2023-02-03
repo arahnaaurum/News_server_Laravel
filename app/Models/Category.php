@@ -21,10 +21,6 @@ class Category extends Model
         'description',
     ];
 
-    protected $guarded = [
-        'id',
-    ];
-
     protected $casts = [
         'news_ids' => 'array',
     ];
