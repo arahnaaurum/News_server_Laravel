@@ -18,7 +18,7 @@
             @method('put')
             <div class="form-group">
                 <label for="category_id">Category</label>
-                <select class="form-control" id="category_id" name="category_id" @error('category_id') @enderror>
+                <select class="form-control @error('category_id') is_invalid @enderror" id="category_id" name="category_id">
                     <option value="0">--Select category--</option>
                     @foreach($categories as $category)
                         <option @if($source->category_id === $category->id) selected @endif value="{{ $category->id }}">{{ $category->title }}</option>
@@ -28,12 +28,12 @@
 
             <div class="form-group">
                 <label for="site">Site</label>
-                <input type="text" id="site" value="{{ $source->site }}" class="form-control" name="site" @error('site')@enderror>
+                <input type="text" id="site" value="{{ $source->site }}" class="form-control @error('site') is_invalid @enderror" name="site" >
             </div>
 
             <div class="form-group">
                 <label for="url">URL</label>
-                <input type="text" id="url" value="{{ $source->url }}" class="form-control" name="url" @error('url') @enderror>
+                <input type="text" id="url" value="{{ $source->url }}" class="form-control @error('url') is_invalid @enderror" name="url" >
             </div>
 
             <button type="submit" class="btn btn-success">Save</button>

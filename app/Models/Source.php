@@ -22,4 +22,6 @@ class Source extends Model
         'url',
         'category_id'
     ];
+
+//    добавить связь с моделью Category belongs to
 }

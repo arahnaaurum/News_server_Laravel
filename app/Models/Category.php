@@ -41,4 +41,6 @@ class Category extends Model
     {
         return DB::table($this->table)->find($id, ['id', 'title', 'description']);
     }
+
+    //    добавить связь с моделью Source has many
 }
