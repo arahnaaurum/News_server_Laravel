@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\ParserController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\SocialProvidersController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\NewsController;
@@ -58,6 +60,8 @@ Route::group(['middleware' => 'auth'], static function() {
     Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'is.admin'], static function() {
         Route::get('/', AdminController::class)
             ->name('index');
+        Route::get('parser', ParserController::class)
+            ->name('parser');
         Route::resource('categories', AdminCategoryController::class);
         Route::resource('news', AdminNewsController::class);
         Route::resource('sources', AdminSourceController::class);
@@ -80,3 +84,12 @@ Route::get('session', function (){
 
 Auth::routes();
 
+Route::group(['middleware' => 'guest'], function(){
+
+    Route::get('/auth/redirect/{driver}', [SocialProvidersController::class, 'redirect'])
+        -> where('driver', '\w+')
+        ->name('social.auth.redirect');
+
+    Route::get('/auth/callback/{driver}', [SocialProvidersController::class, 'callback'])
+        -> where('driver', '\w+');
+});
