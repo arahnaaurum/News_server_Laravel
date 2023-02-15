@@ -7,7 +7,7 @@
                 <x-alert type="danger" :message="$error"></x-alert>
             @endforeach
         @endif
-        <form method="post" action=" {{ route('admin.news.store') }}">
+        <form method="post" action=" {{ route('admin.news.store') }}" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
                 <label for="category_ids">Category</label>
@@ -31,7 +31,7 @@
 
             <div class="form-group">
                 <label for="image">Image</label>
-                <input type="file" id="image" class="form-control @error('image') is-invalid @enderror" name="image"></input>
+                <input type="file" id="image" class="form-control @error('image') is-invalid @enderror" name="image">
             </div>
 
             <div class="form-group">
@@ -52,3 +52,24 @@
         </form>
     </div>
 @endsection
+@push('js')
+    <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
+    <script>
+        ClassicEditor
+            .create( document.querySelector('#description') )
+            .catch( error => {
+                console.error( error );
+            } );
+    </script>
+    <script>
+        var options = {
+            filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
+            filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images&_token=',
+            filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
+            filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token='
+        };
+    </script>
+    <script>
+        CKEDITOR.replace('description', options);
+    </script>
+@endpush

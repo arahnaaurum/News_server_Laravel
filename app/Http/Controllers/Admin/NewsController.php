@@ -10,6 +10,7 @@ use App\Http\Requests\News\EditRequest;
 use App\Models\News;
 use App\QueryBuilders\CategoriesQueryBuilder;
 use App\QueryBuilders\NewsQueryBuilder;
+use App\Services\UploadService;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -56,11 +57,17 @@ class NewsController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function store(CreateRequest $request): RedirectResponse
+    public function store(CreateRequest $request, UploadService $uploadService): RedirectResponse
     {
 //        $news = new News($request->except('_token', 'category_ids'));
 
-        $news = News::create($request->validated());
+        $validated = $request->validated();
+
+        if ($request->hasFile('image')) {
+            $validated['image'] = $uploadService->uploadImage($request->file('image'));
+        }
+
+        $news = News::create($validated);
 
         if ($news) {
             $news->categories()->attach($request->getCategoryIds());
@@ -104,12 +111,16 @@ class NewsController extends Controller
      * @param News $news
      * @return RedirectResponse
      */
-    public function update(EditRequest $request, News $news): RedirectResponse
+    public function update(EditRequest $request, News $news, UploadService $uploadService): RedirectResponse
     {
-        $news = $news->fill(($request->validated()));
+        $validated = $request->validated();
+        if ($request->hasFile('image')) {
+            $validated['image'] = $uploadService->uploadImage($request->file('image'));
+        }
+
+        $news = $news->fill($validated);
 
         if ($news->save()) {
-//            $news->categories()->sync($request->input('category_ids'));
             $news->categories()->sync($request->getCategoryIds());
             return redirect()->route('admin.news.index')->with('success', 'News updated');
         }
