@@ -4,6 +4,7 @@ declare (strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\QueryBuilders\CategoriesQueryBuilder;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -11,17 +12,17 @@ class CategoryController extends Controller
 {
     use CategoryTrait;
 
-    public function index(): View
+    public function index(CategoriesQueryBuilder $categoriesQueryBuilder): View
     {
-        return \view('news.categories', [
-            'categories' => $this->getCategory(),
+        return \view('categories.index',[
+            'categories'=> $categoriesQueryBuilder->getAll(),
         ]);
     }
 
-    public function show(int $id): View
+    public function show(CategoriesQueryBuilder $categoriesQueryBuilder, int $id): View
     {
-        return \view('news.showCategory', [
-                'category' => $this->getCategory($id)[1],
+        return \view('categories.show', [
+                'category' => $categoriesQueryBuilder->getCategoryById($id),
             ]);
     }
 }
